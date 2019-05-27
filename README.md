@@ -15,30 +15,25 @@ application to a [`MySQL`](https://www.mysql.com/) replication cluster.
 
 # Start Environment
 
-## Docker Compose
-
 - Open one terminal
 
 - Inside `/springboot-proxysql-mysql` root folder run
 
 ```bash
-docker-compose up -d
+./env-init.sh
 ```
 > To stop and remove containers, networks and volumes type
 > ```
-> docker-compose down -v
+> ./env-shutdown.sh
 > ```
 
-- Wait a little bit until all `MySQL` containers are `Up (healthy)`. To check the status of the containers run the command
-```bash
-docker-compose ps
-```
+- Wait a little bit until the environment is up and running
 
 ## Check MySQL Replication
 
 To check the replication status run
 ```bash
-./check-replication-status.sh
+./env-check-replication-status.sh
 ```
 
 You should see something like
@@ -90,7 +85,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
                             ...
 ```
 
-## Check ProxySQL
+## Check ProxySQL consiguration
 
 - Run the script below to connect to `ProxySQL` command line terminal
 ```bash

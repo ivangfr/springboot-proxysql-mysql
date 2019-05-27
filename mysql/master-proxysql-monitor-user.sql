@@ -1,0 +1,3 @@
+CREATE USER 'monitor'@'%' IDENTIFIED BY 'monitor';
+GRANT ALL PRIVILEGES ON *.* TO 'monitor'@'%';
+FLUSH PRIVILEGES;

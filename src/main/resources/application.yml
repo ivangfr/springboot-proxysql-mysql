@@ -6,8 +6,7 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
-#    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/customerdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
-    url: jdbc:mysql://${PROXYSQL_HOST:localhost}:${PROXYSQL_PORT:6033}/customerdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:6033}/customerdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: secret
 
