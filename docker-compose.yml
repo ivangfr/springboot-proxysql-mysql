@@ -11,8 +11,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=customerdb
-    command: ["mysqld", "--server-id=1", "--log-bin=mysql-bin.log", "--enforce-gtid-consistency=ON",
-              "--log-slave-updates=ON", "--gtid-mode=ON"]
+    volumes:
+      - ./mysql/master.sql:/docker-entrypoint-initdb.d/master.sql
+    command: ["--server-id=1", "--log-bin=mysql-bin.log", "--relay_log_info_repository=TABLE",
+              "--master-info-repository=TABLE", "--gtid-mode=on", "--enforce-gtid-consistency"]
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
       start_period: 10s
@@ -26,7 +28,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=customerdb
-    command: ["mysqld", "--server-id=2", "--enforce-gtid-consistency=ON", "--log-slave-updates=ON", "--gtid-mode=ON"]
+    volumes:
+      - ./mysql/slave.sql:/docker-entrypoint-initdb.d/slave.sql
+    command: ["mysqld", "--server-id=2", "--enforce-gtid-consistency=ON", "--log-slave-updates=ON", "--read_only=TRUE",
+              "--skip-log-bin", "--skip-log-slave-updates", "--gtid-mode=ON"]
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
       start_period: 10s
@@ -40,7 +45,20 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=customerdb
-    command: ["mysqld", "--server-id=3", "--enforce-gtid-consistency=ON", "--log-slave-updates=ON", "--gtid-mode=ON"]
+    volumes:
+      - ./mysql/slave.sql:/docker-entrypoint-initdb.d/slave.sql
+    command: ["mysqld", "--server-id=2", "--enforce-gtid-consistency=ON", "--log-slave-updates=ON", "--read_only=TRUE",
+              "--skip-log-bin", "--skip-log-slave-updates", "--gtid-mode=ON"]
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
       start_period: 10s
+
+  proxysql:
+    container_name: proxysql
+    image: proxysql/proxysql:2.0.4
+    restart: unless-stopped
+    ports:
+      - "6033:6033"
+      - "6032:6032"
+    volumes:
+      - ./proxysql/proxysql.cnf:/etc/proxysql.cnf
