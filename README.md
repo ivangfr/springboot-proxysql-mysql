@@ -1,19 +1,32 @@
-# springboot-proxysql-mysql
+# `springboot-proxysql-mysql`
 
 The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a Spring-Boot
 application to a [`MySQL`](https://www.mysql.com/) replication cluster.
 
-# Environment Architecture
+## Environment Architecture
 
-// TODO picture
+![project-diagram](images/project-diagram.png)
 
 ### MySQL
 
+[`MySQL`](https://www.mysql.com/) is the most popular Open Source SQL database management system, supported by Oracle.
+In this project, we set a *MySQL Replication Master-Slave Cluster* that contains three MySQL instances: one master and
+two slaves. In the replication process, the data is copied automatically from master to the slaves instances.
+
 ### ProxySQL
+
+[`ProxySQL`](https://proxysql.com/) is an open-source, high-performance MySQL proxy server. It seats between application
+and database servers by accepting incoming traffic from MySQL clients and forwards it to backend MySQL servers. In
+this project, we set two hostgroups: `writer=10` and `reader=20`. Those hostgroups say to which database servers the
+write or read request should go. The MySQL master instance belongs to the `writer` hostgroup. On the other hand, 
+the slaves belong to `reader` one.
 
 ### Customer Rest API
 
-# Start Environment
+Spring-boot Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
+MySQL, as usual, we connect to ProxySQL. 
+
+## Start Environment
 
 - Open one terminal
 
@@ -23,7 +36,7 @@ application to a [`MySQL`](https://www.mysql.com/) replication cluster.
 ./env-init.sh
 ```
 > To stop and remove containers, networks and volumes type
-> ```
+> ```bash
 > ./env-shutdown.sh
 > ```
 
@@ -38,15 +51,12 @@ To check the replication status run
 
 You should see something like
 ```bash
-
-------------
 mysql-master
 ------------
 mysql: [Warning] Using a password on the command line interface can be insecure.
 File    Position        Binlog_Do_DB    Binlog_Ignore_DB        Executed_Gtid_Set
 mysql-bin.000003        945                     38f50e33-7fc4-11e9-a810-0242ac1b0003:1-9
 
--------------
 mysql-slave-1
 -------------
 mysql: [Warning] Using a password on the command line interface can be insecure.
@@ -65,7 +75,6 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
             Slave_SQL_Running: Yes
                             ...
 
--------------
 mysql-slave-2
 -------------
 mysql: [Warning] Using a password on the command line interface can be insecure.
@@ -85,7 +94,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
                             ...
 ```
 
-## Check ProxySQL consiguration
+## Check ProxySQL configuration
 
 - Run the script below to connect to `ProxySQL` command line terminal
 ```bash
@@ -97,14 +106,21 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 SELECT * FROM mysql_servers;
 ```
 
-# Start Application
+- The following select shows the global variables
+```bash
+SELECT * FROM global_variables;
+```
+
+## Start Application
 
 - In a terminal, inside `springboot-proxysql-mysql`, run
 ```bash
 ./mvnw clean spring-boot:run
 ```
 
-# Configure/Check MySQL Logs
+- The application Swagger Page is http://localhost:8080/swagger-ui.html
+
+## Enable / Check MySQL Logs
 
 - Connect to each one `MySQL` container and ...
 ```bash
@@ -117,7 +133,16 @@ docker exec -it mysql-slave-2 mysql -u root -psecret --database=customerdb
 ```bash
 SET GLOBAL general_log = 'ON';
 SET global log_output = 'table';
-
-SELECT event_time, command_type, SUBSTRING(argument,1,250) FROM mysql.general_log WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %'); 
 ```
 
+- Below, it is a select query to check the SQL command (`select`, `insert`, `update` and/or `delete`) processed by the
+MySQL instance
+```bash
+SELECT event_time, command_type, SUBSTRING(argument,1,250) FROM mysql.general_log \
+WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %'); 
+```
+
+## References
+
+- https://github.com/sysown/proxysql/wiki
+- https://github.com/sysown/proxysql/wiki/ProxySQL-Configuration
