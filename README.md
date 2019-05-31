@@ -21,7 +21,7 @@ this project, we set two hostgroups: `writer=10` and `reader=20`. Those hostgrou
 write or read requests should go. The MySQL master belongs to the `writer` hostgroup. On the other hand, the slaves
 belong to `reader` one.
 
-### Customer Rest API
+### Customer Api
 
 Spring-boot Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
 MySQL, as usual, the application is connected to ProxySQL. 
