@@ -10,7 +10,7 @@ application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluste
 ### MySQL
 
 [`MySQL`](https://www.mysql.com/) is the most popular Open Source SQL database management system, supported by Oracle.
-In this project, we set a *MySQL Replication Master-Slave Cluster* that contains three MySQL instances: one master and
+In this project, we set a **MySQL Replication Master-Slave Cluster** that contains three MySQL instances: one master and
 two slaves. In the replication process, the data is copied automatically from master to the slaves.
 
 ### ProxySQL
@@ -21,7 +21,7 @@ this project, we set two hostgroups: `writer=10` and `reader=20`. Those hostgrou
 write or read requests should go. The MySQL master belongs to the `writer` hostgroup. On the other hand, the slaves
 belong to `reader` one.
 
-### Customer Api
+### customer-api
 
 Spring-boot Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
 MySQL, as usual, the application is connected to ProxySQL. 
@@ -30,7 +30,7 @@ MySQL, as usual, the application is connected to ProxySQL.
 
 - Open one terminal
 
-- Inside `/springboot-proxysql-mysql` root folder run
+- Inside `springboot-proxysql-mysql` root folder run
 
 ```bash
 ./env-init.sh
@@ -111,11 +111,11 @@ SELECT * FROM mysql_servers;
 SELECT * FROM global_variables;
 ```
 
-## Start Application
+## Start customer-api
 
 - In a terminal, inside `springboot-proxysql-mysql`, run
 ```bash
-./mvnw clean spring-boot:run
+./mvnw clean spring-boot:run --projects customer-api
 ```
 
 - The application Swagger website is http://localhost:8080/swagger-ui.html
@@ -148,7 +148,7 @@ SET global log_output = 'table';
 6. The `SELECT` below is the one we will use to check the SQL command (`select`, `insert`, `update` and/or `delete`)
 processed
 ```roomsql
-SELECT event_time, command_type, SUBSTRING(argument,1,250) FROM mysql.general_log \
+SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log \
 WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %'); 
 ```
 
