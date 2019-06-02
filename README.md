@@ -124,7 +124,7 @@ SELECT * FROM global_variables;
 
 1. Open three terminals: one for `mysql-master`, one for `mysql-slave-1` and another for `mysql-slave-2`
 
-2. In terminal, connect to MySQL command line terminal running in `mysql-master` Docker container
+2. In terminal, connect to MySQL monitor running in `mysql-master` Docker container
 ```bash
 docker exec -it mysql-master mysql -u root -psecret --database=customerdb
 ```
@@ -139,28 +139,30 @@ docker exec -it mysql-slave-1 mysql -u root -psecret --database=customerdb
 docker exec -it mysql-slave-2 mysql -u root -psecret --database=customerdb
 ```
 
-5. Inside each one of the MySQL terminals, run the following commands to enable MySQL logs
+5. Inside each one of the MySQL monitors, run the following commands to enable MySQL logs
 ```bash
 SET GLOBAL general_log = 'ON';
 SET global log_output = 'table';
 ```
 
 6. The `SELECT` below is the one we will use to check the SQL command (`select`, `insert`, `update` and/or `delete`)
-processed
+processed. It must be run inside MySQL monitor.
 ```roomsql
-SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log \
+SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
 WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %'); 
 ```
 
-7. Let's create a customer
+7. Open a new terminal. In it, we will run just `curl` commands.
+
+8. In the `curl` terminal, let's create a customer.
 ```bash
 curl -i -X POST http://localhost:8080/api/customers \
   -H 'Content-Type: application/json' \
   -d '{"firstName": "Ivan", "lastName": "Franchin"}'
 ```
 
-8. If you run the `SELECT` described in the **step 6.** inside `mysql-master` terminal, you should see
-```roomsql
+9. If you run the `SELECT` described in the **step 6.** inside `mysql-master` terminal, you should see
+```
 +-------------+--------------+---------------------------------------------------------------------------+
 | event_time  | command_type | SUBSTRING(argument,1,250)                                                 |
 +-------------+--------------+---------------------------------------------------------------------------+
@@ -168,13 +170,13 @@ curl -i -X POST http://localhost:8080/api/customers \
 +-------------+--------------+---------------------------------------------------------------------------+
 ```
 
-9. Let's call the `GET` endpoint to retrieve `customer 1`
+10. In the `curl` terminal, let's call the `GET` endpoint to retrieve `customer 1`
 ```bash
 curl -i http://localhost:8080/api/customers/1
 ```
 
-10. If you run the `SELECT` described in the **step 6.** in one of the slaves, you will see
-```roomsql
+11. If you run the `SELECT` described in the **step 6.** in one of the slaves, you will see
+```
 +-------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | event_time  | command_type | SUBSTRING(argument,1,250)                                                                                                                                         |
 +-------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -183,15 +185,15 @@ curl -i http://localhost:8080/api/customers/1
 ```
 > Note. Just one slave should processed it.
 
-11. Let's `DELETE` the `customer 1`
+12. In the `curl` terminal, let's `DELETE` the `customer 1`
 ```bash
 curl -i -X DELETE http://localhost:8080/api/customers/1
 ```
 > Note. During this delete, Hibernate/JPA does a select before performing the deletion of the record. So, you should
 see another select in one of the slaves
 
-12. Running the `SELECT` described in the **step 6.** inside the `mysql-master` terminal, you should get
-```roomsql
+13. Running the `SELECT` described in the **step 6.** inside the `mysql-master` terminal, you should get
+```
 +-------------+--------------+---------------------------------------------------------------------------+
 | event_time  | command_type | SUBSTRING(argument,1,250)                                                 |
 +-------------+--------------+---------------------------------------------------------------------------+
