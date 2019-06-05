@@ -18,6 +18,8 @@ docker run -d \
   --restart=unless-stopped \
   --env "MYSQL_ROOT_PASSWORD=secret" \
   --env "MYSQL_DATABASE=customerdb" \
+  --env "MYSQL_USER=admin" \
+  --env "MYSQL_PASSWORD=admin" \
   --publish 3306:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
   --health-start-period=10s \
@@ -39,6 +41,8 @@ docker run -d \
   --restart=unless-stopped \
   --env "MYSQL_ROOT_PASSWORD=secret" \
   --env "MYSQL_DATABASE=customerdb" \
+  --env "MYSQL_USER=admin" \
+  --env "MYSQL_PASSWORD=admin" \
   --publish 3307:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
   --health-start-period=10s \
@@ -60,6 +64,8 @@ docker run -d \
   --restart=unless-stopped \
   --env "MYSQL_ROOT_PASSWORD=secret" \
   --env "MYSQL_DATABASE=customerdb" \
+  --env "MYSQL_USER=admin" \
+  --env "MYSQL_PASSWORD=admin" \
   --publish 3308:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
   --health-start-period=10s \
