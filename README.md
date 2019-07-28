@@ -3,7 +3,7 @@
 The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a Spring-Boot
 application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluster.
 
-## Environment Architecture
+## Project Architecture
 
 ![project-diagram](images/project-diagram.png)
 
@@ -28,29 +28,22 @@ MySQL, as usual, the application is connected to ProxySQL.
 
 ## Start Environment
 
-- Open one terminal
-
-- Inside `springboot-proxysql-mysql` root folder run
-
-```bash
+Open one terminal and inside `springboot-proxysql-mysql` root folder run
+```
 ./env-init.sh
 ```
-> To stop and remove containers, networks and volumes type
-> ```bash
-> ./env-shutdown.sh
-> ```
 
-- Wait a little bit until the environment is up and running
+Wait a little bit until the environment is up and running
 
 ## Check MySQL Replication
 
 To check the replication status run
-```bash
+```
 ./env-check-replication-status.sh
 ```
 
 You should see something like
-```bash
+```
 mysql-master
 ------------
 mysql: [Warning] Using a password on the command line interface can be insecure.
@@ -96,58 +89,58 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 
 ## Check ProxySQL configuration
 
-- Run the script below to connect to `ProxySQL` command line terminal
-```bash
+Run the script below to connect to `ProxySQL` command line terminal
+```
 ./proxysql-admin.sh
 ```
 
-- In `ProxySQL Admin> ` terminal run the following command to see the mysql servers 
-```bash
+In `ProxySQL Admin> ` terminal run the following command to see the mysql servers 
+```
 SELECT * FROM mysql_servers;
 ```
 
-- The following select shows the global variables
-```bash
+The following select shows the global variables
+```
 SELECT * FROM global_variables;
 ```
 
 ## Start customer-api
 
-- In a terminal, inside `springboot-proxysql-mysql`, run
-```bash
+In a terminal, inside `springboot-proxysql-mysql`, run
+```
 ./mvnw clean spring-boot:run --projects customer-api
 ```
 
-- The application Swagger website is http://localhost:8080/swagger-ui.html
+The application Swagger website is http://localhost:8080/swagger-ui.html
 
 ## Simulation
 
 1. Open three terminals: one for `mysql-master`, one for `mysql-slave-1` and another for `mysql-slave-2`
 
 2. In terminal, connect to MySQL monitor running in `mysql-master` Docker container
-```bash
+```
 docker exec -it mysql-master mysql -u root -psecret --database=customerdb
 ```
 
 3. Do the same for `mysql-slave-1`...
-```bash
+```
 docker exec -it mysql-slave-1 mysql -u root -psecret --database=customerdb
 ```
 
 4. ... and `mysql-slave-2`
-```bash
+```
 docker exec -it mysql-slave-2 mysql -u root -psecret --database=customerdb
 ```
 
 5. Inside each one of the MySQL monitors, run the following commands to enable MySQL logs
-```bash
+```
 SET GLOBAL general_log = 'ON';
 SET global log_output = 'table';
 ```
 
 6. The `SELECT` below is the one we will use to check the SQL command (`select`, `insert`, `update` and/or `delete`)
 processed. It must be run inside MySQL monitor.
-```roomsql
+```
 SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
 WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %'); 
 ```
@@ -155,7 +148,7 @@ WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR arg
 7. Open a new terminal. In it, we will run just `curl` commands.
 
 8. In the `curl` terminal, let's create a customer.
-```bash
+```
 curl -i -X POST http://localhost:8080/api/customers \
   -H 'Content-Type: application/json' \
   -d '{"firstName": "Ivan", "lastName": "Franchin"}'
@@ -171,7 +164,7 @@ curl -i -X POST http://localhost:8080/api/customers \
 ```
 
 10. In the `curl` terminal, let's call the `GET` endpoint to retrieve `customer 1`
-```bash
+```
 curl -i http://localhost:8080/api/customers/1
 ```
 
@@ -186,7 +179,7 @@ curl -i http://localhost:8080/api/customers/1
 > Note. Just one slave should processed it.
 
 12. In the `curl` terminal, let's `DELETE` the `customer 1`
-```bash
+```
 curl -i -X DELETE http://localhost:8080/api/customers/1
 ```
 > Note. During this delete, Hibernate/JPA does a select before performing the deletion of the record. So, you should
@@ -200,6 +193,13 @@ see another select in one of the slaves
 | 2019-05-... | Query        | insert into customers (first_name, last_name) values ('Ivan', 'Franchin') |
 | 2019-05-... | Query        | delete from customers where id=1                                          |
 +-------------+--------------+---------------------------------------------------------------------------+
+```
+
+## Shutdown
+
+To stop and remove containers, networks and volumes type
+```
+./env-shutdown.sh
 ```
 
 ## References
