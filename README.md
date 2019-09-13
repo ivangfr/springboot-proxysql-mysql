@@ -1,6 +1,6 @@
 # `springboot-proxysql-mysql`
 
-The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a Spring-Boot
+The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a Spring Boot
 application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluster.
 
 ## Project Architecture
@@ -23,7 +23,7 @@ belong to `reader` one.
 
 ### customer-api
 
-Spring-boot Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
+Spring Boot Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
 MySQL, as usual, the application is connected to ProxySQL. 
 
 ## Start Environment
