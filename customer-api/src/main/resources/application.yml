@@ -4,7 +4,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     url: jdbc:mysql://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:6033}/customerdb?autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: admin

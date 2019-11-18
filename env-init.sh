@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+MYSQL_VERSION="5.7.28"
+PROXYSQL_VERSION="2.0.8"
+
 echo
 echo "Starting environment"
 echo "===================="
@@ -23,7 +26,7 @@ docker run -d \
   --publish 3306:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
   --health-start-period=10s \
-  mysql:5.7.26 \
+  mysql:${MYSQL_VERSION} \
     --server-id=1 \
     --log-bin='mysql-bin-1.log' \
     --relay_log_info_repository=TABLE \
@@ -43,7 +46,7 @@ docker run -d \
   --publish 3307:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
   --health-start-period=10s \
-  mysql:5.7.26 \
+  mysql:${MYSQL_VERSION} \
     --server-id=2 \
     --enforce-gtid-consistency=ON \
     --log-slave-updates=ON \
@@ -63,7 +66,7 @@ docker run -d \
   --publish 3308:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
   --health-start-period=10s \
-  mysql:5.7.26 \
+  mysql:${MYSQL_VERSION} \
     --server-id=3 \
     --enforce-gtid-consistency=ON \
     --log-slave-updates=ON \
@@ -107,7 +110,7 @@ docker run -d \
   --publish 6032:6032 \
   --publish 6033:6033 \
   --volume $PWD/proxysql/proxysql.cnf:/etc/proxysql.cnf \
-  proxysql/proxysql:2.0.4
+  proxysql/proxysql:${PROXYSQL_VERSION}
 
 echo
 echo "Waiting 5 seconds before checking mysql servers"

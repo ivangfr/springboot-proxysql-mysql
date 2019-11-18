@@ -13,7 +13,7 @@ public class CreateCustomerDto {
     private String firstName;
 
     @NotBlank
-    @ApiModelProperty(example = "Franchin", position = 2)
+    @ApiModelProperty(position = 1, example = "Franchin")
     private String lastName;
 
 }

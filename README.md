@@ -1,30 +1,33 @@
 # `springboot-proxysql-mysql`
 
-The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a Spring Boot
+The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a
+[`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
 application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluster.
 
 ## Project Architecture
 
 ![project-diagram](images/project-diagram.png)
 
+## Applications
+
 ### MySQL
 
-[`MySQL`](https://www.mysql.com/) is the most popular Open Source SQL database management system, supported by Oracle.
-In this project, we set a **MySQL Replication Master-Slave Cluster** that contains three MySQL instances: one master and
-two slaves. In the replication process, the data is copied automatically from master to the slaves.
+[`MySQL`](https://www.mysql.com/) is the most popular Open Source SQL database management system, supported by `Oracle`.
+In this project, we set a **MySQL Replication Master-Slave Cluster** that contains three `MySQL` instances: one master
+and two slaves. In the replication process, the data is copied automatically from master to the slaves.
 
 ### ProxySQL
 
-[`ProxySQL`](https://proxysql.com/) is an open-source, high-performance MySQL proxy server. It seats between application
-and database servers by accepting incoming traffic from MySQL clients and forwards it to backend MySQL servers. In
-this project, we set two hostgroups: `writer=10` and `reader=20`. Those hostgroups say to which database servers
-write or read requests should go. The MySQL master belongs to the `writer` hostgroup. On the other hand, the slaves
+[`ProxySQL`](https://proxysql.com/) is an open-source, high-performance `MySQL` proxy server. It seats between application
+and database servers by accepting incoming traffic from `MySQL` clients and forwards it to backend `MySQL` servers. In
+this project, we set two `hostgroups`: `writer=10` and `reader=20`. Those hostgroups say to which database servers
+write or read requests should go. The `MySQL` master belongs to the `writer` hostgroup. On the other hand, the slaves
 belong to `reader` one.
 
 ### customer-api
 
-Spring Boot Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
-MySQL, as usual, the application is connected to ProxySQL. 
+`Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to
+`MySQL`, as usual, the application is connected to `ProxySQL`. 
 
 ## Start Environment
 
@@ -94,7 +97,7 @@ Run the script below to connect to `ProxySQL` command line terminal
 ./proxysql-admin.sh
 ```
 
-In `ProxySQL Admin> ` terminal run the following command to see the mysql servers 
+In `ProxySQL Admin> ` terminal run the following command to see the `MySQL` servers 
 ```
 SELECT * FROM mysql_servers;
 ```
@@ -106,7 +109,7 @@ SELECT * FROM global_variables;
 
 ## Start customer-api
 
-In a terminal, inside `springboot-proxysql-mysql`, run
+Open a new a terminal and, inside `springboot-proxysql-mysql` root folder, run
 ```
 ./mvnw clean spring-boot:run --projects customer-api
 ```
@@ -117,7 +120,7 @@ The application Swagger website is http://localhost:8080/swagger-ui.html
 
 1. Open three terminals: one for `mysql-master`, one for `mysql-slave-1` and another for `mysql-slave-2`
 
-2. In terminal, connect to MySQL monitor running in `mysql-master` Docker container
+2. In terminal, connect to `MySQL Monitor` running in `mysql-master` Docker container
 ```
 docker exec -it mysql-master mysql -u root -psecret --database=customerdb
 ```
@@ -132,22 +135,22 @@ docker exec -it mysql-slave-1 mysql -u root -psecret --database=customerdb
 docker exec -it mysql-slave-2 mysql -u root -psecret --database=customerdb
 ```
 
-5. Inside each one of the MySQL monitors, run the following commands to enable MySQL logs
+5. Inside each one of the `MySQL Monitors`, run the following commands to enable `MySQL` logs
 ```
 SET GLOBAL general_log = 'ON';
 SET global log_output = 'table';
 ```
 
 6. The `SELECT` below is the one we will use to check the SQL command (`select`, `insert`, `update` and/or `delete`)
-processed. It must be run inside MySQL monitor.
+processed. It must be run inside `MySQL Monitor`.
 ```
 SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
 WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %'); 
 ```
 
-7. Open a new terminal. In it, we will run just `curl` commands.
+7. Open a new terminal. In it, we will run just `CURL` commands.
 
-8. In the `curl` terminal, let's create a customer.
+8. In the `CURL` terminal, let's create a customer.
 ```
 curl -i -X POST http://localhost:8080/api/customers \
   -H 'Content-Type: application/json' \
@@ -178,7 +181,7 @@ curl -i http://localhost:8080/api/customers/1
 ```
 > Note. Just one slave should processed it.
 
-12. In the `curl` terminal, let's `DELETE` the `customer 1`
+12. In the `CURL` terminal, let's `DELETE` the `customer 1`
 ```
 curl -i -X DELETE http://localhost:8080/api/customers/1
 ```
@@ -197,7 +200,11 @@ see another select in one of the slaves
 
 ## Shutdown
 
-To stop and remove containers, networks and volumes type
+Stop `customer-api` application, by pressing `ctrl-c`.
+
+In order to get out of `MySQL Monitors` type `exit`.
+
+Finally, to stop and remove `MySQL`s and `ProxySQL` containers, networks and volumes, run the following script
 ```
 ./env-shutdown.sh
 ```
