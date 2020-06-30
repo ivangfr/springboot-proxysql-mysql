@@ -18,13 +18,12 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 - **customer-api**
 
-  `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application is connected to `ProxySQL`. 
+  `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application will be connected to `ProxySQL`. 
 
 ## Prerequisites
 
 - [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 - [`Docker`](https://www.docker.com/)
-- [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
 ## Start Environment
 
