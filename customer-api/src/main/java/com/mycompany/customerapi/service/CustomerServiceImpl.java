@@ -3,18 +3,16 @@ package com.mycompany.customerapi.service;
 import com.mycompany.customerapi.exception.CustomerNotFoundException;
 import com.mycompany.customerapi.model.Customer;
 import com.mycompany.customerapi.repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
 
     @Override
     public List<Customer> getAllCustomers() {

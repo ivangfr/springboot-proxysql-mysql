@@ -1,6 +1,6 @@
 package com.mycompany.customerapi.rest.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -9,11 +9,11 @@ import javax.validation.constraints.NotBlank;
 public class CreateCustomerDto {
 
     @NotBlank
-    @ApiModelProperty(example = "Ivan")
+    @Schema(example = "Ivan")
     private String firstName;
 
     @NotBlank
-    @ApiModelProperty(position = 1, example = "Franchin")
+    @Schema(example = "Franchin")
     private String lastName;
 
 }

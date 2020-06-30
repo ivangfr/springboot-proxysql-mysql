@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-MYSQL_VERSION="5.7.28"
-PROXYSQL_VERSION="2.0.8"
+source scripts/my-functions.sh
+
+MYSQL_VERSION="5.7.30"
+PROXYSQL_VERSION="2.0.12"
 
 echo
 echo "Starting environment"
@@ -76,8 +78,9 @@ docker run -d \
     --gtid-mode=ON
 
 echo
-echo "Waiting 20 seconds before setting MySQL replication ..."
-sleep 20
+wait_for_container_log "mysql-master" "port: 3306"
+wait_for_container_log "mysql-slave-1" "port: 3306"
+wait_for_container_log "mysql-slave-2" "port: 3306"
 
 echo
 echo "Setting MySQL Replication"
@@ -89,12 +92,12 @@ docker exec -i mysql-slave-2 mysql -uroot -psecret < mysql/slave-replication.sql
 echo
 echo "Checking MySQL Replication"
 echo "--------------------------"
-./env-check-replication-status.sh
+./check-replication-status.sh
 
 echo
 echo "Creating ProxySQL monitor user"
 echo "------------------------------"
-docker exec -i mysql-master mysql -uroot -psecret < mysql/master-proxysql-monitor-user.sql
+docker exec -i mysql-master mysql -uroot -psecret --ssl-mode=DISABLED < mysql/master-proxysql-monitor-user.sql
 
 echo
 echo "Waiting 5 seconds before starting proxysql container ..."
