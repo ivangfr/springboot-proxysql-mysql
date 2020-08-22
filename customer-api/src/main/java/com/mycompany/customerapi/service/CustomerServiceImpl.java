@@ -21,8 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer validateAndGetCustomer(Long id) {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(String.format("Customer with id '%s' not found", id)));
+        return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
     }
 
     @Override

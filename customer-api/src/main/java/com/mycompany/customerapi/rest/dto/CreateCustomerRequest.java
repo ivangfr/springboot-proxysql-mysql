@@ -3,13 +3,17 @@ package com.mycompany.customerapi.rest.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@Data
-public class UpdateCustomerDto {
+import javax.validation.constraints.NotBlank;
 
-    @Schema(example = "Ivan2")
+@Data
+public class CreateCustomerRequest {
+
+    @NotBlank
+    @Schema(example = "Ivan")
     private String firstName;
 
-    @Schema(example = "Franchin2")
+    @NotBlank
+    @Schema(example = "Franchin")
     private String lastName;
 
 }

@@ -8,17 +8,19 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 ## Applications
 
-- **MySQL**
+- ### MySQL
 
   [`MySQL`](https://www.mysql.com/) is the most popular Open Source SQL database management system, supported by `Oracle`. In this project, we set a **MySQL Replication Master-Slave Cluster** that contains three `MySQL` instances: one master and two slaves. In the replication process, the data is copied automatically from master to the slaves.
 
-- **ProxySQL**
+- ### ProxySQL
 
   [`ProxySQL`](https://proxysql.com/) is an open-source, high-performance `MySQL` proxy server. It seats between application and database servers by accepting incoming traffic from `MySQL` clients and forwards it to backend `MySQL` servers. In this project, we set two `hostgroups`: `writer=10` and `reader=20`. Those hostgroups say to which database servers write or read requests should go. The `MySQL` master belongs to the `writer` hostgroup. On the other hand, the slaves belong to `reader` one.
 
-- **customer-api**
+- ### customer-api
 
-  `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application will be connected to `ProxySQL`. 
+  `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application will be connected to `ProxySQL`.
+  
+  ![customer-api-swagger](images/customer-api-swagger.png)
 
 ## Prerequisites
 

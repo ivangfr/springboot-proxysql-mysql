@@ -2,9 +2,9 @@ package com.mycompany.customerapi.rest;
 
 import com.mycompany.customerapi.mapper.CustomerMapper;
 import com.mycompany.customerapi.model.Customer;
-import com.mycompany.customerapi.rest.dto.CreateCustomerDto;
+import com.mycompany.customerapi.rest.dto.CreateCustomerRequest;
 import com.mycompany.customerapi.rest.dto.CustomerDto;
-import com.mycompany.customerapi.rest.dto.UpdateCustomerDto;
+import com.mycompany.customerapi.rest.dto.UpdateCustomerRequest;
 import com.mycompany.customerapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,16 +46,16 @@ public class CustomerController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CustomerDto createCustomer(@Valid @RequestBody CreateCustomerDto createCustomerDto) {
-        Customer customer = customerMapper.toCustomer(createCustomerDto);
+    public CustomerDto createCustomer(@Valid @RequestBody CreateCustomerRequest createCustomerRequest) {
+        Customer customer = customerMapper.toCustomer(createCustomerRequest);
         customer = customerService.saveCustomer(customer);
         return customerMapper.toCustomerDto(customer);
     }
 
     @PutMapping("/{id}")
-    public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody UpdateCustomerDto updateCustomerDto) {
+    public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerService.validateAndGetCustomer(id);
-        customerMapper.updateCustomerFromDto(updateCustomerDto, customer);
+        customerMapper.updateCustomerFromDto(updateCustomerRequest, customer);
         customer = customerService.saveCustomer(customer);
         return customerMapper.toCustomerDto(customer);
     }
