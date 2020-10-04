@@ -1,12 +1,16 @@
 package com.mycompany.customerapi.config;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+
+import java.util.Collections;
+
+import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 public class SwaggerConfig {
@@ -15,18 +19,18 @@ public class SwaggerConfig {
     private String applicationName;
 
     @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI().components(new Components()).info(new Info().title(applicationName));
+    Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(regex("/api/.*"))
+                .build()
+                .useDefaultResponseMessages(false)
+                .apiInfo(getApiInfo());
     }
 
-    @Bean
-    public GroupedOpenApi customApi() {
-        return GroupedOpenApi.builder().group("api").pathsToMatch("/api/**").build();
-    }
-
-    @Bean
-    public GroupedOpenApi actuatorApi() {
-        return GroupedOpenApi.builder().group("actuator").pathsToMatch("/actuator/**").build();
+    private ApiInfo getApiInfo() {
+        return new ApiInfo(applicationName, null, null, null, null, null, null, Collections.emptyList());
     }
 
 }

@@ -118,7 +118,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   ./mvnw clean spring-boot:run --projects customer-api
   ```
 
-- The application Swagger website is http://localhost:8080/swagger-ui.html
+- The application Swagger website is http://localhost:8080/swagger-ui/index.html
 
 ## Simulation
 
@@ -190,7 +190,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    | 2020-06-30 08:04:10.422544 | Query        | select customer0_.id as id1_0_0_, customer0_.created_at as created_2_0_0_, customer0_.first_name as first_na3_0_0_, customer0_.last_name as last_nam4_0_0_, customer0_.updated_at as updated_5_0_0_ from customers customer0_ where customer0_.id=1 |
    +----------------------------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
-   > **Note:** Just one slave should processed it.
+   > **Note:** Just one slave should process it.
 
 1. Next, let's `UPDATE` the `customer 1`. For it, go to the `curl` terminal and run
    ```

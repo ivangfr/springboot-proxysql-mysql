@@ -17,11 +17,6 @@ management:
     health:
       show-details: always
 
-springdoc:
-  show-actuator: true
-  swagger-ui:
-    groups-order: DESC
-
 logging:
   level:
     org.hibernate:
