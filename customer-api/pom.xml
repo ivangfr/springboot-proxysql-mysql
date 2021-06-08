@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.mycompany</groupId>
         <artifactId>springboot-proxysql-mysql</artifactId>
@@ -16,7 +15,8 @@
 
     <properties>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-        <springfox.version>3.0.0</springfox.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <springdoc-openapi.version>1.5.9</springdoc-openapi.version>
     </properties>
 
     <dependencies>
@@ -44,11 +44,11 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
 
-        <!-- Springfox -->
+        <!-- SpringDoc OpenApi -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
 
         <dependency>
@@ -91,6 +91,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct-binding.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>

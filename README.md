@@ -118,7 +118,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   ./mvnw clean spring-boot:run --projects customer-api
   ```
 
-- The application Swagger website is http://localhost:8080/swagger-ui/index.html
+- The application Swagger website is http://localhost:8080/swagger-ui.html
 
 ## Simulation
 
@@ -244,10 +244,8 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 ## Shutdown
 
 - To stop `customer-api` application, go to the terminal where it's running and press `Ctrl+C`.
-
 - In order to get out of `MySQL Monitors` type `exit`.
-
-- To stop and remove `MySQL`s and `ProxySQL` containers, networks and volumes, run the following script
+- To stop and remove `MySQL`s and `ProxySQL` containers, network and volumes, run the following script
   ```
   ./shutdown-environment.sh
   ```
