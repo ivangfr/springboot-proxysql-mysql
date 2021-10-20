@@ -3,7 +3,7 @@
 source scripts/my-functions.sh
 
 MYSQL_VERSION="5.7.35"
-PROXYSQL_VERSION="2.2.0"
+PROXYSQL_VERSION="2.3.2"
 
 echo
 echo "Starting environment"
@@ -27,7 +27,6 @@ docker run -d \
   --env "MYSQL_PASSWORD=admin" \
   --publish 3306:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
-  --health-start-period=10s \
   mysql:${MYSQL_VERSION} \
     --server-id=1 \
     --log-bin='mysql-bin-1.log' \
@@ -47,7 +46,6 @@ docker run -d \
   --env "MYSQL_ROOT_PASSWORD=secret" \
   --publish 3307:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
-  --health-start-period=10s \
   mysql:${MYSQL_VERSION} \
     --server-id=2 \
     --enforce-gtid-consistency=ON \
@@ -67,7 +65,6 @@ docker run -d \
   --env "MYSQL_ROOT_PASSWORD=secret" \
   --publish 3308:3306 \
   --health-cmd='mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}' \
-  --health-start-period=10s \
   mysql:${MYSQL_VERSION} \
     --server-id=3 \
     --enforce-gtid-consistency=ON \

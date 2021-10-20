@@ -11,5 +11,4 @@ public class UpdateCustomerRequest {
 
     @Schema(example = "Franchin2")
     private String lastName;
-
 }

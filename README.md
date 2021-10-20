@@ -4,7 +4,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 ## Project Architecture
 
-![project-diagram](images/project-diagram.png)
+![project-diagram](documentation/project-diagram.png)
 
 ## Applications
 
@@ -20,11 +20,11 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
   `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application will be connected to `ProxySQL`.
   
-  ![customer-api-swagger](images/customer-api-swagger.png)
+  ![customer-api-swagger](documentation/customer-api-swagger.png)
 
 ## Prerequisites
 
-- [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+- [`Java 11+`](https://www.oracle.com/java/technologies/downloads/#java11)
 - [`Docker`](https://www.docker.com/)
 
 ## Start Environment
@@ -245,7 +245,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 - To stop `customer-api` application, go to the terminal where it's running and press `Ctrl+C`.
 - In order to get out of `MySQL Monitors` type `exit`.
-- To stop and remove `MySQL`s and `ProxySQL` containers, network and volumes, run the following script
+- To stop and remove `MySQL`s and `ProxySQL` containers, network and volumes, make sure you are inside `springboot-proxysql-mysql` root folder and run the following script
   ```
   ./shutdown-environment.sh
   ```

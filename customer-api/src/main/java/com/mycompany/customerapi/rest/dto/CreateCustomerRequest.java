@@ -15,5 +15,4 @@ public class CreateCustomerRequest {
     @NotBlank
     @Schema(example = "Franchin")
     private String lastName;
-
 }

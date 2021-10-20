@@ -3,7 +3,7 @@ package com.mycompany.customerapi.rest;
 import com.mycompany.customerapi.mapper.CustomerMapper;
 import com.mycompany.customerapi.model.Customer;
 import com.mycompany.customerapi.rest.dto.CreateCustomerRequest;
-import com.mycompany.customerapi.rest.dto.CustomerDto;
+import com.mycompany.customerapi.rest.dto.CustomerResponse;
 import com.mycompany.customerapi.rest.dto.UpdateCustomerRequest;
 import com.mycompany.customerapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -31,39 +31,39 @@ public class CustomerController {
     private final CustomerMapper customerMapper;
 
     @GetMapping
-    public List<CustomerDto> getAllCustomers() {
+    public List<CustomerResponse> getAllCustomers() {
         return customerService.getAllCustomers()
                 .stream()
-                .map(customerMapper::toCustomerDto)
+                .map(customerMapper::toCustomerResponse)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public CustomerDto getCustomerById(@PathVariable Long id) {
+    public CustomerResponse getCustomerById(@PathVariable Long id) {
         Customer customer = customerService.validateAndGetCustomer(id);
-        return customerMapper.toCustomerDto(customer);
+        return customerMapper.toCustomerResponse(customer);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CustomerDto createCustomer(@Valid @RequestBody CreateCustomerRequest createCustomerRequest) {
+    public CustomerResponse createCustomer(@Valid @RequestBody CreateCustomerRequest createCustomerRequest) {
         Customer customer = customerMapper.toCustomer(createCustomerRequest);
         customer = customerService.saveCustomer(customer);
-        return customerMapper.toCustomerDto(customer);
+        return customerMapper.toCustomerResponse(customer);
     }
 
     @PutMapping("/{id}")
-    public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody UpdateCustomerRequest updateCustomerRequest) {
+    public CustomerResponse updateCustomer(@PathVariable Long id, @Valid @RequestBody UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerService.validateAndGetCustomer(id);
-        customerMapper.updateCustomerFromDto(updateCustomerRequest, customer);
+        customerMapper.updateCustomerFromResponse(updateCustomerRequest, customer);
         customer = customerService.saveCustomer(customer);
-        return customerMapper.toCustomerDto(customer);
+        return customerMapper.toCustomerResponse(customer);
     }
 
     @DeleteMapping("/{id}")
-    public CustomerDto deleteCustomer(@PathVariable Long id) {
+    public CustomerResponse deleteCustomer(@PathVariable Long id) {
         Customer customer = customerService.validateAndGetCustomer(id);
         customerService.deleteCustomer(customer);
-        return customerMapper.toCustomerDto(customer);
+        return customerMapper.toCustomerResponse(customer);
     }
 }
