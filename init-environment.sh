@@ -2,7 +2,7 @@
 
 source scripts/my-functions.sh
 
-MYSQL_VERSION="5.7.36"
+MYSQL_VERSION="5.7.37"
 PROXYSQL_VERSION="2.3.2"
 
 echo
