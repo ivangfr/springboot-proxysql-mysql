@@ -49,13 +49,11 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   ```
   mysql-master
   ------------
-  mysql: [Warning] Using a password on the command line interface can be insecure.
   File    Position        Binlog_Do_DB    Binlog_Ignore_DB        Executed_Gtid_Set
   mysql-bin.000003        945                     38f50e33-7fc4-11e9-a810-0242ac1b0003:1-9
   
   mysql-slave-1
   -------------
-  mysql: [Warning] Using a password on the command line interface can be insecure.
   *************************** 1. row ***************************
                  Slave_IO_State: Waiting for master to send event
                     Master_Host: mysql-master
@@ -73,7 +71,6 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   
   mysql-slave-2
   -------------
-  mysql: [Warning] Using a password on the command line interface can be insecure.
   *************************** 1. row ***************************
                  Slave_IO_State: Waiting for master to send event
                     Master_Host: mysql-master
@@ -126,17 +123,17 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 1. In `mysql-master` terminal, connect to `MySQL Monitor` by running
    ```
-   docker exec -it mysql-master mysql -u root -psecret --database=customerdb
+   docker exec -it -e MYSQL_PWD=secret mysql-master mysql -uroot --database customerdb
    ```
 
 1. Do the same for `mysql-slave-1`...
    ```
-   docker exec -it mysql-slave-1 mysql -u root -psecret --database=customerdb
+   docker exec -it -e MYSQL_PWD=secret mysql-slave-1 mysql -uroot --database customerdb
    ```
 
 1. ... and `mysql-slave-2`
    ```
-   docker exec -it mysql-slave-2 mysql -u root -psecret --database=customerdb
+   docker exec -it -e MYSQL_PWD=secret mysql-slave-2 mysql -uroot --database customerdb
    ```
 
 1. Inside each one of the `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs

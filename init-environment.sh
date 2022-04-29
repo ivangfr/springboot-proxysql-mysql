@@ -2,7 +2,7 @@
 
 source scripts/my-functions.sh
 
-MYSQL_VERSION="5.7.37"
+MYSQL_VERSION="5.7.38"
 PROXYSQL_VERSION="2.3.2"
 
 echo
@@ -82,9 +82,9 @@ wait_for_container_log "mysql-slave-2" "port: 3306"
 echo
 echo "Setting MySQL Replication"
 echo "-------------------------"
-docker exec -i mysql-master mysql -uroot -psecret < mysql/master-replication.sql
-docker exec -i mysql-slave-1 mysql -uroot -psecret < mysql/slave-replication.sql
-docker exec -i mysql-slave-2 mysql -uroot -psecret < mysql/slave-replication.sql
+docker exec -i -e MYSQL_PWD=secret mysql-master mysql -uroot < mysql/master-replication.sql
+docker exec -i -e MYSQL_PWD=secret mysql-slave-1 mysql -uroot < mysql/slave-replication.sql
+docker exec -i -e MYSQL_PWD=secret mysql-slave-2 mysql -uroot < mysql/slave-replication.sql
 
 echo
 echo "Checking MySQL Replication"
@@ -94,7 +94,7 @@ echo "--------------------------"
 echo
 echo "Creating ProxySQL monitor user"
 echo "------------------------------"
-docker exec -i mysql-master mysql -uroot -psecret --ssl-mode=DISABLED < mysql/master-proxysql-monitor-user.sql
+docker exec -i -e MYSQL_PWD=secret mysql-master mysql -uroot --ssl-mode=DISABLED < mysql/master-proxysql-monitor-user.sql
 
 echo
 echo "Waiting 5 seconds before starting proxysql container ..."
@@ -119,7 +119,7 @@ sleep 5
 echo
 echo "Checking mysql servers"
 echo "----------------------"
-docker exec -i mysql-master bash -c 'mysql -hproxysql -P6032 -uradmin -pradmin --prompt "ProxySQL Admin> " <<< "select * from mysql_servers;"'
+docker exec -i -e MYSQL_PWD=radmin mysql-master bash -c 'mysql -hproxysql -P6032 -uradmin --prompt "ProxySQL Admin> " <<< "select * from mysql_servers;"'
 
 echo
 echo "Environment Up and Running"
