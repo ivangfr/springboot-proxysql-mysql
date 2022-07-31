@@ -1,6 +1,6 @@
-package com.mycompany.customerapi.service;
+package com.ivanfranchin.customerapi.service;
 
-import com.mycompany.customerapi.model.Customer;
+import com.ivanfranchin.customerapi.model.Customer;
 
 import java.util.List;
 

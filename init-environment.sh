@@ -3,7 +3,7 @@
 source scripts/my-functions.sh
 
 MYSQL_VERSION="5.7.38"
-PROXYSQL_VERSION="2.3.2"
+PROXYSQL_VERSION="2.4.2"
 
 echo
 echo "Starting environment"

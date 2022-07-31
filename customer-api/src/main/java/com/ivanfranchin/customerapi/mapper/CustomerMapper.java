@@ -1,9 +1,9 @@
-package com.mycompany.customerapi.mapper;
+package com.ivanfranchin.customerapi.mapper;
 
-import com.mycompany.customerapi.model.Customer;
-import com.mycompany.customerapi.rest.dto.CreateCustomerRequest;
-import com.mycompany.customerapi.rest.dto.CustomerResponse;
-import com.mycompany.customerapi.rest.dto.UpdateCustomerRequest;
+import com.ivanfranchin.customerapi.model.Customer;
+import com.ivanfranchin.customerapi.rest.dto.CreateCustomerRequest;
+import com.ivanfranchin.customerapi.rest.dto.CustomerResponse;
+import com.ivanfranchin.customerapi.rest.dto.UpdateCustomerRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;

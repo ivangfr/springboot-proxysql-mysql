@@ -1,11 +1,11 @@
-package com.mycompany.customerapi.rest;
+package com.ivanfranchin.customerapi.rest;
 
-import com.mycompany.customerapi.mapper.CustomerMapper;
-import com.mycompany.customerapi.model.Customer;
-import com.mycompany.customerapi.rest.dto.CreateCustomerRequest;
-import com.mycompany.customerapi.rest.dto.CustomerResponse;
-import com.mycompany.customerapi.rest.dto.UpdateCustomerRequest;
-import com.mycompany.customerapi.service.CustomerService;
+import com.ivanfranchin.customerapi.rest.dto.CustomerResponse;
+import com.ivanfranchin.customerapi.mapper.CustomerMapper;
+import com.ivanfranchin.customerapi.model.Customer;
+import com.ivanfranchin.customerapi.rest.dto.CreateCustomerRequest;
+import com.ivanfranchin.customerapi.rest.dto.UpdateCustomerRequest;
+import com.ivanfranchin.customerapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

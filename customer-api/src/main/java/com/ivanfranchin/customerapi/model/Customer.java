@@ -1,4 +1,4 @@
-package com.mycompany.customerapi.model;
+package com.ivanfranchin.customerapi.model;
 
 import lombok.Data;
 

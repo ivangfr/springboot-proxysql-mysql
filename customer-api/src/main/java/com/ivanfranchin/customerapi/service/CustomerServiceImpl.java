@@ -1,8 +1,8 @@
-package com.mycompany.customerapi.service;
+package com.ivanfranchin.customerapi.service;
 
-import com.mycompany.customerapi.exception.CustomerNotFoundException;
-import com.mycompany.customerapi.model.Customer;
-import com.mycompany.customerapi.repository.CustomerRepository;
+import com.ivanfranchin.customerapi.model.Customer;
+import com.ivanfranchin.customerapi.exception.CustomerNotFoundException;
+import com.ivanfranchin.customerapi.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

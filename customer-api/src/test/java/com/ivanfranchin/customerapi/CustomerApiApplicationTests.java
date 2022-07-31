@@ -1,4 +1,4 @@
-package com.mycompany.customerapi;
+package com.ivanfranchin.customerapi;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

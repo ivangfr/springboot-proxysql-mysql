@@ -1,4 +1,4 @@
-package com.mycompany.customerapi.config;
+package com.ivanfranchin.customerapi.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

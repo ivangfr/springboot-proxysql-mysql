@@ -20,11 +20,11 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
   `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application will be connected to `ProxySQL`.
   
-  ![customer-api-swagger](documentation/customer-api-swagger.png)
+  ![customer-api-swagger](documentation/customer-api-swagger.jpeg)
 
 ## Prerequisites
 
-- [`Java 11+`](https://www.oracle.com/java/technologies/downloads/#java11)
+- [`Java 17+`](https://www.oracle.com/java/technologies/downloads/#java17)
 - [`Docker`](https://www.docker.com/)
 
 ## Start Environment
@@ -115,7 +115,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   ./mvnw clean spring-boot:run --projects customer-api
   ```
 
-- The application Swagger website is http://localhost:8080/swagger-ui.html
+- The application Swagger website is http://localhost:8080/swagger-ui/index.html
 
 ## Simulation
 
@@ -166,7 +166,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
    
-   > **Note:** If you run the same `SELECT` in the slave's terminal, you will see that just the `mysql-master` processed the `insert` command. Btw, it's in `mysql-master` where all inserts, updates and deletes are executed.
+   > **Note**: If you run the same `SELECT` in the slave's terminal, you will see that just the `mysql-master` processed the `insert` command. Btw, it's in `mysql-master` where all inserts, updates and deletes are executed.
 
 1. Now, let's call to the `GET` endpoint to retrieve `customer 1`. For it, go to `curl` terminal and run
    ```
@@ -187,7 +187,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    | 2020-06-30 08:04:10.422544 | Query        | select customer0_.id as id1_0_0_, customer0_.created_at as created_2_0_0_, customer0_.first_name as first_na3_0_0_, customer0_.last_name as last_nam4_0_0_, customer0_.updated_at as updated_5_0_0_ from customers customer0_ where customer0_.id=1 |
    +----------------------------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
-   > **Note:** Just one slave should process it.
+   > **Note**: Just one slave should process it.
 
 1. Next, let's `UPDATE` the `customer 1`. For it, go to the `curl` terminal and run
    ```
@@ -212,7 +212,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
    
-   > **Note:** During an update, Hibernate/JPA does a select before performing the record update. So, you should see another select in one of the slaves 
+   > **Note**: During an update, Hibernate/JPA does a select before performing the record update. So, you should see another select in one of the slaves 
 
 1. Finally, let's `DELETE` the `customer 1`. For it, go to the `curl` terminal and run
    ```
@@ -236,7 +236,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
    
-   > **Note:** As it happens with an update, during a deletion, Hibernate/JPA does a select before performing the deletion of the record. So, you should see another select in one of the slaves
+   > **Note**: As it happens with an update, during a deletion, Hibernate/JPA does a select before performing the deletion of the record. So, you should see another select in one of the slaves
 
 ## Shutdown
 

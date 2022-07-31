@@ -1,4 +1,4 @@
-package com.mycompany.customerapi.config;
+package com.ivanfranchin.customerapi.config;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.error.ErrorAttributeOptions.Include;
