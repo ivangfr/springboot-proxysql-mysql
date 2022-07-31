@@ -19,8 +19,15 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 - ### customer-api
 
   `Spring Boot` Web Java application that exposes a REST API for managing customers. Instead of connecting directly to `MySQL`, as usual, the application will be connected to `ProxySQL`.
-  
-  ![customer-api-swagger](documentation/customer-api-swagger.jpeg)
+
+  `customer-api` has the following endpoints:
+  ```
+     GET /api/customers
+     GET /api/customers/{id}
+    POST /api/customers {"firstName":"...", "lastName":"..."}
+     PUT /api/customers/{id} {"firstName":"...", "lastName":"..."}
+  DELETE /api/customers/{id}
+  ```
 
 ## Prerequisites
 
@@ -114,8 +121,6 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   ```
   ./mvnw clean spring-boot:run --projects customer-api
   ```
-
-- The application Swagger website is http://localhost:8080/swagger-ui/index.html
 
 ## Simulation
 

@@ -55,7 +55,7 @@ public class CustomerController {
     @PutMapping("/{id}")
     public CustomerResponse updateCustomer(@PathVariable Long id, @Valid @RequestBody UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerService.validateAndGetCustomer(id);
-        customerMapper.updateCustomerFromResponse(updateCustomerRequest, customer);
+        customerMapper.updateCustomerFromRequest(updateCustomerRequest, customer);
         customer = customerService.saveCustomer(customer);
         return customerMapper.toCustomerResponse(customer);
     }

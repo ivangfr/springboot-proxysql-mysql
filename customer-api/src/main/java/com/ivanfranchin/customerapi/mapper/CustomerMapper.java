@@ -18,5 +18,5 @@ public interface CustomerMapper {
 
     Customer toCustomer(CreateCustomerRequest createCustomerRequest);
 
-    void updateCustomerFromResponse(UpdateCustomerRequest updateCustomerRequest, @MappingTarget Customer customer);
+    void updateCustomerFromRequest(UpdateCustomerRequest updateCustomerRequest, @MappingTarget Customer customer);
 }

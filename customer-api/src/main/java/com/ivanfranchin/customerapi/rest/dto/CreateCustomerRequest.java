@@ -1,18 +1,6 @@
 package com.ivanfranchin.customerapi.rest.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 
-@Data
-public class CreateCustomerRequest {
-
-    @NotBlank
-    @Schema(example = "Ivan")
-    private String firstName;
-
-    @NotBlank
-    @Schema(example = "Franchin")
-    private String lastName;
+public record CreateCustomerRequest(@NotBlank String firstName, @NotBlank String lastName) {
 }
