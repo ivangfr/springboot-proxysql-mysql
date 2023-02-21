@@ -56,42 +56,42 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
   ```
   mysql-master
   ------------
-  File    Position        Binlog_Do_DB    Binlog_Ignore_DB        Executed_Gtid_Set
-  mysql-bin.000003        945                     38f50e33-7fc4-11e9-a810-0242ac1b0003:1-9
+  File  Position  Binlog_Do_DB  Binlog_Ignore_DB  Executed_Gtid_Set
+  mysql-bin-1.000003  1397      62a2f52f-b16b-11ed-91fc-0242c0a85002:1-14
   
   mysql-slave-1
   -------------
   *************************** 1. row ***************************
                  Slave_IO_State: Waiting for master to send event
                     Master_Host: mysql-master
-                    Master_User: repl
+                    Master_User: replication
                     Master_Port: 3306
                   Connect_Retry: 60
-                Master_Log_File: mysql-bin.000003
-            Read_Master_Log_Pos: 945
-                 Relay_Log_File: 5c42804f49ab-relay-bin.000003
-                  Relay_Log_Pos: 1158
-          Relay_Master_Log_File: mysql-bin.000003
+                Master_Log_File: mysql-bin-1.000003
+            Read_Master_Log_Pos: 1397
+                 Relay_Log_File: fa249eba35d6-relay-bin.000003
+                  Relay_Log_Pos: 1614
+          Relay_Master_Log_File: mysql-bin-1.000003
                Slave_IO_Running: Yes
               Slave_SQL_Running: Yes
-                              ...
+                                 ...
   
   mysql-slave-2
   -------------
   *************************** 1. row ***************************
                  Slave_IO_State: Waiting for master to send event
                     Master_Host: mysql-master
-                    Master_User: repl
+                    Master_User: replication
                     Master_Port: 3306
                   Connect_Retry: 60
-                Master_Log_File: mysql-bin.000003
-            Read_Master_Log_Pos: 945
-                 Relay_Log_File: d08e85c4beb8-relay-bin.000003
-                  Relay_Log_Pos: 1158
-          Relay_Master_Log_File: mysql-bin.000003
+                Master_Log_File: mysql-bin-1.000003
+            Read_Master_Log_Pos: 1397
+                 Relay_Log_File: cbfd1f4bb01a-relay-bin.000003
+                  Relay_Log_Pos: 1614
+          Relay_Master_Log_File: mysql-bin-1.000003
                Slave_IO_Running: Yes
               Slave_SQL_Running: Yes
-                              ...
+                                 ...
   ```
 
 ## Check ProxySQL configuration
@@ -115,7 +115,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 ## Start customer-api
 
-- Open a new terminal and navigate to `springboot-proxysql-mysql` root folder
+- In a terminal and navigate to `springboot-proxysql-mysql` root folder
 
 - Run the following Maven command to start `customer-api`
   ```
@@ -141,7 +141,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    docker exec -it -e MYSQL_PWD=secret mysql-slave-2 mysql -uroot --database customerdb
    ```
 
-1. Inside each one of the `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs
+1. Inside each `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs
    ```
    SET GLOBAL general_log = 'ON';
    SET global log_output = 'table';
@@ -159,7 +159,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 1. Go to `mysql-master` terminal and run the following `SELECT` command
    ```
    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
    ```
 
    It should return
@@ -167,7 +167,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    | event_time                 | command_type | argument                                                                                                                                        |
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | 2020-06-30 08:02:59.981686 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2020-06-30 08:02:59', 'Ivan', 'Franchin', '2020-06-30 08:02:59') |
+   | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
    
@@ -181,16 +181,16 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 1. If you run, in one of the slave's terminal, the `SELECT` command below
    ```
    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
    ```
 
    It should return
    ```
-   +----------------------------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | event_time                 | command_type | argument                                                                                                                                                                                                                                            |
-   +----------------------------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | 2020-06-30 08:04:10.422544 | Query        | select customer0_.id as id1_0_0_, customer0_.created_at as created_2_0_0_, customer0_.first_name as first_na3_0_0_, customer0_.last_name as last_nam4_0_0_, customer0_.updated_at as updated_5_0_0_ from customers customer0_ where customer0_.id=1 |
-   +----------------------------+--------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
+   | event_time                 | command_type | argument                                                                                                          |
+   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
+   | 2023-02-20 22:14:06.582449 | Query        | select c1_0.id,c1_0.created_at,c1_0.first_name,c1_0.last_name,c1_0.updated_at from customers c1_0 where c1_0.id=1 |
+   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
    ```
    > **Note**: Just one slave should process it.
 
@@ -204,7 +204,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 1. Running the following `SELECT` inside the `mysql-master` terminal
    ```
    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
    ```
 
    It should return
@@ -212,8 +212,8 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    | event_time                 | command_type | argument                                                                                                                                        |
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | 2020-06-30 08:02:59.981686 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2020-06-30 08:02:59', 'Ivan', 'Franchin', '2020-06-30 08:02:59') |
-   | 2020-06-30 08:05:04.873448 | Query        | update customers set created_at='2020-06-30 08:02:59', first_name='Ivan2', last_name='Franchin2', updated_at='2020-06-30 08:05:04' where id=1   |
+   | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
+   | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
    
@@ -227,7 +227,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 1. Running the following `SELECT` inside the `mysql-master` terminal
    ```
    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select customer0_.id %' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
    ```
 
    It should return
@@ -235,9 +235,9 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    | event_time                 | command_type | argument                                                                                                                                        |
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | 2020-06-30 08:02:59.981686 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2020-06-30 08:02:59', 'Ivan', 'Franchin', '2020-06-30 08:02:59') |
-   | 2020-06-30 08:05:04.873448 | Query        | update customers set created_at='2020-06-30 08:02:59', first_name='Ivan2', last_name='Franchin2', updated_at='2020-06-30 08:05:04' where id=1   |
-   | 2020-06-30 08:05:39.310617 | Query        | delete from customers where id=1                                                                                                                |
+   | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
+   | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
+   | 2023-02-20 22:14:52.358207 | Query        | delete from customers where id=1                                                                                                                |
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
    
