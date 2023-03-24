@@ -4,7 +4,7 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 ## Project Architecture
 
-![project-diagram](documentation/project-diagram.png)
+![project-diagram](documentation/project-diagram.jpeg)
 
 ## Applications
 
@@ -254,5 +254,5 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 ## References
 
-- https://github.com/sysown/proxysql/wiki
-- https://github.com/sysown/proxysql/wiki/ProxySQL-Configuration
+- https://proxysql.com/documentation/
+- https://proxysql.com/documentation/ProxySQL-Configuration/
