@@ -130,37 +130,37 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 1. Open three terminals: one for `mysql-master`, one for `mysql-slave-1` and another for `mysql-slave-2`
 
-1. In `mysql-master` terminal, connect to `MySQL Monitor` by running
+2. In `mysql-master` terminal, connect to `MySQL Monitor` by running
    ```
    docker exec -it -e MYSQL_PWD=secret mysql-master mysql -uroot --database customerdb
    ```
 
-1. Do the same for `mysql-slave-1`...
+3. Do the same for `mysql-slave-1`...
    ```
    docker exec -it -e MYSQL_PWD=secret mysql-slave-1 mysql -uroot --database customerdb
    ```
 
-1. ... and `mysql-slave-2`
+4. ... and `mysql-slave-2`
    ```
    docker exec -it -e MYSQL_PWD=secret mysql-slave-2 mysql -uroot --database customerdb
    ```
 
-1. Inside each `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs
+5. Inside each `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs
    ```
    SET GLOBAL general_log = 'ON';
    SET global log_output = 'table';
    ```
 
-1. Open a new terminal. In it, we will just run `curl` commands.
+6. Open a new terminal. In it, we will just run `curl` commands.
 
-1. In the `curl` terminal, let's create a customer.
+7. In the `curl` terminal, let's create a customer.
    ```
    curl -i -X POST http://localhost:8080/api/customers \
      -H 'Content-Type: application/json' \
      -d '{"firstName": "Ivan", "lastName": "Franchin"}'
    ```
    
-1. Go to `mysql-master` terminal and run the following `SELECT` command
+8. Go to `mysql-master` terminal and run the following `SELECT` command
    ```
    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
    WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
@@ -177,73 +177,73 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
    
    > **Note**: If you run the same `SELECT` in the slave's terminal, you will see that just the `mysql-master` processed the `insert` command. Btw, it's in `mysql-master` where all inserts, updates and deletes are executed.
 
-1. Now, let's call to the `GET` endpoint to retrieve `customer 1`. For it, go to `curl` terminal and run
+9. Now, let's call to the `GET` endpoint to retrieve `customer 1`. For it, go to `curl` terminal and run
    ```
    curl -i http://localhost:8080/api/customers/1
    ```
 
-1. If you run, in one of the slave's terminal, the `SELECT` command below
-   ```
-   SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
-   ```
+10. If you run, in one of the slave's terminal, the `SELECT` command below
+    ```
+    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
+    WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+    ```
 
-   It should return
-   ```
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
-   | event_time                 | command_type | argument                                                                                                          |
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
-   | 2023-02-20 22:14:06.582449 | Query        | select c1_0.id,c1_0.created_at,c1_0.first_name,c1_0.last_name,c1_0.updated_at from customers c1_0 where c1_0.id=1 |
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
-   ```
+    It should return
+    ```
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
+    | event_time                 | command_type | argument                                                                                                          |
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
+    | 2023-02-20 22:14:06.582449 | Query        | select c1_0.id,c1_0.created_at,c1_0.first_name,c1_0.last_name,c1_0.updated_at from customers c1_0 where c1_0.id=1 |
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
+    ```
    > **Note**: Just one slave should process it.
 
-1. Next, let's `UPDATE` the `customer 1`. For it, go to the `curl` terminal and run
-   ```
-   curl -i -X PUT http://localhost:8080/api/customers/1 \
-     -H 'Content-Type: application/json' \
-     -d '{"firstName": "Ivan2", "lastName": "Franchin2"}'
-   ```
+11. Next, let's `UPDATE` the `customer 1`. For it, go to the `curl` terminal and run
+    ```
+    curl -i -X PUT http://localhost:8080/api/customers/1 \
+      -H 'Content-Type: application/json' \
+      -d '{"firstName": "Ivan2", "lastName": "Franchin2"}'
+    ```
 
-1. Running the following `SELECT` inside the `mysql-master` terminal
-   ```
-   SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
-   ```
+12. Running the following `SELECT` inside the `mysql-master` terminal
+    ```
+    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
+    WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+    ```
 
-   It should return
-   ```
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | event_time                 | command_type | argument                                                                                                                                        |
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
-   | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   ```
+    It should return
+    ```
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+    | event_time                 | command_type | argument                                                                                                                                        |
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
+    | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+    ```
    
    > **Note**: During an update, Hibernate/JPA does a select before performing the record update. So, you should see another select in one of the slaves 
 
-1. Finally, let's `DELETE` the `customer 1`. For it, go to the `curl` terminal and run
-   ```
-   curl -i -X DELETE http://localhost:8080/api/customers/1
-   ```
+13. Finally, let's `DELETE` the `customer 1`. For it, go to the `curl` terminal and run
+    ```
+    curl -i -X DELETE http://localhost:8080/api/customers/1
+    ```
 
-1. Running the following `SELECT` inside the `mysql-master` terminal
-   ```
-   SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
-   WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
-   ```
+14. Running the following `SELECT` inside the `mysql-master` terminal
+    ```
+    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
+    WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
+    ```
 
-   It should return
-   ```
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | event_time                 | command_type | argument                                                                                                                                        |
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
-   | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
-   | 2023-02-20 22:14:52.358207 | Query        | delete from customers where id=1                                                                                                                |
-   +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
-   ```
+    It should return
+    ```
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+    | event_time                 | command_type | argument                                                                                                                                        |
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+    | 2023-02-20 22:13:15.400178 | Query        | insert into customers (created_at, first_name, last_name, updated_at) values ('2023-02-20 22:13:15', 'Ivan', 'Franchin', '2023-02-20 22:13:15') |
+    | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
+    | 2023-02-20 22:14:52.358207 | Query        | delete from customers where id=1                                                                                                                |
+    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
+    ```
    
    > **Note**: As it happens with an update, during a deletion, Hibernate/JPA does a select before performing the deletion of the record. So, you should see another select in one of the slaves
 
