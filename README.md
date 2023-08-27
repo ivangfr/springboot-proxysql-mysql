@@ -2,6 +2,10 @@
 
 The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluster.
 
+## Proof-of-Concepts & Articles
+
+On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-Concepts (PoCs) and articles. You can easily search for the technology you are interested in by using the filter. Who knows, perhaps I have already implemented a PoC or written an article about what you are looking for.
+
 ## Project Architecture
 
 ![project-diagram](documentation/project-diagram.jpeg)
