@@ -6,6 +6,10 @@ The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load b
 
 On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-Concepts (PoCs) and articles. You can easily search for the technology you are interested in by using the filter. Who knows, perhaps I have already implemented a PoC or written an article about what you are looking for.
 
+## Additional Readings
+
+- \[**Medium**\] [**Optimizing Spring Boot’s Connection to MySQL Master-Slave Clusters with ProxySQL**](https://medium.com/@ivangfr/optimizing-spring-boots-connection-to-mysql-master-slave-clusters-with-proxysql-af275a0a4cea)
+
 ## Project Architecture
 
 ![project-diagram](documentation/project-diagram.jpeg)
