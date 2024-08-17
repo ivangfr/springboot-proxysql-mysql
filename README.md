@@ -1,6 +1,6 @@
 # springboot-proxysql-mysql
 
-The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluster.
+The goal of this project is to use [`ProxySQL`](https://proxysql.com/) to load balance requests from a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application to [`MySQL`](https://www.mysql.com/) Replication Master-Slave Cluster.
 
 ## Proof-of-Concepts & Articles
 
