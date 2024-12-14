@@ -9,14 +9,6 @@ spring:
     username: admin
     password: admin
 
-management:
-  endpoints:
-    web:
-      exposure.include: beans, env, health, info, metrics, mappings
-  endpoint:
-    health:
-      show-details: always
-
 logging:
   level:
     org.hibernate:
