@@ -40,11 +40,11 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 ## Prerequisites
 
 - [`Java 21+`](https://www.oracle.com/java/technologies/downloads/#java21)
-- [`Docker`](https://www.docker.com/)
+- Some containerization tool [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.
 
 ## Start Environment
 
-- Open a terminal and, inside `springboot-proxysql-mysql` root folder, run the following script
+- Open a terminal and, inside the `springboot-proxysql-mysql` root folder, run the following script:
   ```
   ./init-environment.sh
   ```
@@ -53,14 +53,14 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Check MySQL Replication
 
-- In a terminal, make sure you are inside `springboot-proxysql-mysql` root folder
+- In a terminal, make sure you are inside the `springboot-proxysql-mysql` root folder;
 
-- To check the replication status run
+- To check the replication status run:
   ```
   ./check-replication-status.sh
   ```
 
-  You should see something like
+  You should see something like:
   ```
   mysql-master
   ------------
@@ -104,37 +104,37 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Check ProxySQL configuration
 
-- In a terminal and inside `springboot-proxysql-mysql` root folder, run the script below to connect to `ProxySQL` command line terminal
+- In a terminal and inside the `springboot-proxysql-mysql` root folder, run the script below to connect to `ProxySQL` command line terminal:
   ```
   ./proxysql-admin.sh
   ```
 
-- In `ProxySQL Admin> ` terminal run the following command to see the `MySQL` servers 
+- In `ProxySQL Admin> ` terminal run the following command to see the `MySQL` servers: 
   ```
   SELECT * FROM mysql_servers;
   ```
 
-- The following select shows the global variables
+- The following select shows the global variables:
   ```
   SELECT * FROM global_variables;
   ```
   
-- In order to exit `ProxySQL` command line terminal, type `exit`
+- In order to exit `ProxySQL` command line terminal, type `exit`.
 
 ## Start customer-api
 
-- In a terminal and navigate to `springboot-proxysql-mysql` root folder
+- In a terminal and navigate to the `springboot-proxysql-mysql` root folder;
 
-- Run the following Maven command to start `customer-api`
+- Run the following Maven command to start the application:
   ```
   ./mvnw clean spring-boot:run --projects customer-api
   ```
 
 ## Simulation
 
-1. Open three terminals: one for `mysql-master`, one for `mysql-slave-1` and another for `mysql-slave-2`
+1. Open three terminals: one for `mysql-master`, one for `mysql-slave-1` and another for `mysql-slave-2`;
 
-2. In `mysql-master` terminal, connect to `MySQL Monitor` by running
+2. In `mysql-master` terminal, connect to `MySQL Monitor` by running:
    ```
    docker exec -it -e MYSQL_PWD=secret mysql-master mysql -uroot --database customerdb
    ```
@@ -149,28 +149,28 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
    docker exec -it -e MYSQL_PWD=secret mysql-slave-2 mysql -uroot --database customerdb
    ```
 
-5. Inside each `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs
+5. Inside each `MySQL Monitor's` terminal, run the following commands to enable `MySQL` logs:
    ```
    SET GLOBAL general_log = 'ON';
    SET global log_output = 'table';
    ```
 
-6. Open a new terminal. In it, we will just run `curl` commands.
+6. Open a new terminal. In it, we will just run `curl` commands;
 
-7. In the `curl` terminal, let's create a customer.
+7. In the `curl` terminal, let's create a customer:
    ```
    curl -i -X POST http://localhost:8080/api/customers \
      -H 'Content-Type: application/json' \
      -d '{"firstName": "Ivan", "lastName": "Franchin"}'
    ```
    
-8. Go to `mysql-master` terminal and run the following `SELECT` command
+8. Go to `mysql-master` terminal and run the following `SELECT` command:
    ```
    SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
    WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
    ```
 
-   It should return
+   It should return:
    ```
    +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
    | event_time                 | command_type | argument                                                                                                                                        |
@@ -181,18 +181,18 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
    
    > **Note**: If you run the same `SELECT` in the slave's terminal, you will see that just the `mysql-master` processed the `insert` command. Btw, it's in `mysql-master` where all inserts, updates and deletes are executed.
 
-9. Now, let's call to the `GET` endpoint to retrieve `customer 1`. For it, go to `curl` terminal and run
+9. Now, let's call to the `GET` endpoint to retrieve `customer 1`. For it, go to `curl` terminal and run:
    ```
    curl -i http://localhost:8080/api/customers/1
    ```
 
-10. If you run, in one of the slave's terminal, the `SELECT` command below
+10. If you run, in one of the slave's terminal, the `SELECT` command below:
     ```
     SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
     WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
     ```
 
-    It should return
+    It should return:
     ```
     +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
     | event_time                 | command_type | argument                                                                                                          |
@@ -200,22 +200,22 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
     | 2023-02-20 22:14:06.582449 | Query        | select c1_0.id,c1_0.created_at,c1_0.first_name,c1_0.last_name,c1_0.updated_at from customers c1_0 where c1_0.id=1 |
     +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------+
     ```
-   > **Note**: Just one slave should process it.
+    > **Note**: Just one slave should process it.
 
-11. Next, let's `UPDATE` the `customer 1`. For it, go to the `curl` terminal and run
+11. Next, let's `UPDATE` the `customer 1`. For it, go to the `curl` terminal and run:
     ```
     curl -i -X PUT http://localhost:8080/api/customers/1 \
       -H 'Content-Type: application/json' \
       -d '{"firstName": "Ivan2", "lastName": "Franchin2"}'
     ```
 
-12. Running the following `SELECT` inside the `mysql-master` terminal
+12. Running the following `SELECT` inside the `mysql-master` terminal:
     ```
     SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
     WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
     ```
 
-    It should return
+    It should return:
     ```
     +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
     | event_time                 | command_type | argument                                                                                                                                        |
@@ -224,21 +224,20 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
     | 2023-02-20 22:14:33.019875 | Query        | update customers set created_at='2023-02-20 22:13:15', first_name='Ivan2', last_name='Franchin2', updated_at='2023-02-20 22:14:33' where id=1   |
     +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
     ```
-   
-   > **Note**: During an update, Hibernate/JPA does a select before performing the record update. So, you should see another select in one of the slaves 
+    > **Note**: During an update, Hibernate/JPA does a select before performing the record update. So, you should see another select in one of the slaves 
 
-13. Finally, let's `DELETE` the `customer 1`. For it, go to the `curl` terminal and run
+13. Finally, let's `DELETE` the `customer 1`. For it, go to the `curl` terminal and run:
     ```
     curl -i -X DELETE http://localhost:8080/api/customers/1
     ```
 
-14. Running the following `SELECT` inside the `mysql-master` terminal
+14. Running the following `SELECT` inside the `mysql-master` terminal:
     ```
     SELECT event_time, command_type, SUBSTRING(argument,1,250) argument FROM mysql.general_log
     WHERE command_type = 'Query' AND (argument LIKE 'insert into customers %' OR argument LIKE 'select c1_0.id%' OR argument LIKE 'update customers %' OR argument LIKE 'delete from customers %');
     ```
 
-    It should return
+    It should return:
     ```
     +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
     | event_time                 | command_type | argument                                                                                                                                        |
@@ -248,19 +247,13 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
     | 2023-02-20 22:14:52.358207 | Query        | delete from customers where id=1                                                                                                                |
     +----------------------------+--------------+-------------------------------------------------------------------------------------------------------------------------------------------------+
     ```
-   
-   > **Note**: As it happens with an update, during a deletion, Hibernate/JPA does a select before performing the deletion of the record. So, you should see another select in one of the slaves
+    > **Note**: As it happens with an update, during a deletion, Hibernate/JPA does a select before performing the deletion of the record. So, you should see another select in one of the slaves
 
 ## Shutdown
 
-- To stop `customer-api` application, go to the terminal where it's running and press `Ctrl+C`.
-- In order to get out of `MySQL Monitors` type `exit`.
-- To stop and remove `MySQL`s and `ProxySQL` containers, network and volumes, make sure you are inside `springboot-proxysql-mysql` root folder and run the following script
+- To stop `customer-api` application, go to the terminal where it's running and press `Ctrl+C`;
+- In order to get out of `MySQL Monitors` type `exit`;
+- To stop and remove `MySQL`s and `ProxySQL` containers, network and volumes, make sure you are inside the `springboot-proxysql-mysql` root folder and run the following script:
   ```
   ./shutdown-environment.sh
   ```
-
-## References
-
-- https://proxysql.com/documentation/
-- https://proxysql.com/documentation/ProxySQL-Configuration/

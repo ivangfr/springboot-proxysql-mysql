@@ -10,7 +10,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -28,18 +28,18 @@ public class Customer {
     private String lastName;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @PrePersist
     public void onPrePersist() {
-        createdAt = updatedAt = LocalDateTime.now();
+        createdAt = updatedAt = Instant.now();
     }
 
     @PreUpdate
     public void onPreUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = Instant.now();
     }
 }
