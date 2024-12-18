@@ -1,7 +1,7 @@
-package com.ivanfranchin.customerapi.model;
+package com.ivanfranchin.customerapi.customer.model;
 
-import com.ivanfranchin.customerapi.rest.dto.CreateCustomerRequest;
-import com.ivanfranchin.customerapi.rest.dto.UpdateCustomerRequest;
+import com.ivanfranchin.customerapi.customer.dto.CreateCustomerRequest;
+import com.ivanfranchin.customerapi.customer.dto.UpdateCustomerRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

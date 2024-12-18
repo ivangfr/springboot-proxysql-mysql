@@ -1,6 +1,6 @@
-package com.ivanfranchin.customerapi.rest.dto;
+package com.ivanfranchin.customerapi.customer.dto;
 
-import com.ivanfranchin.customerapi.model.Customer;
+import com.ivanfranchin.customerapi.customer.model.Customer;
 
 public record CustomerResponse(Long id, String firstName, String lastName) {
 

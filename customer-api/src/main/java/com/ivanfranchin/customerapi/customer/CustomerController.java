@@ -1,10 +1,9 @@
-package com.ivanfranchin.customerapi.rest;
+package com.ivanfranchin.customerapi.customer;
 
-import com.ivanfranchin.customerapi.model.Customer;
-import com.ivanfranchin.customerapi.rest.dto.CreateCustomerRequest;
-import com.ivanfranchin.customerapi.rest.dto.CustomerResponse;
-import com.ivanfranchin.customerapi.rest.dto.UpdateCustomerRequest;
-import com.ivanfranchin.customerapi.service.CustomerService;
+import com.ivanfranchin.customerapi.customer.model.Customer;
+import com.ivanfranchin.customerapi.customer.dto.CreateCustomerRequest;
+import com.ivanfranchin.customerapi.customer.dto.CustomerResponse;
+import com.ivanfranchin.customerapi.customer.dto.UpdateCustomerRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

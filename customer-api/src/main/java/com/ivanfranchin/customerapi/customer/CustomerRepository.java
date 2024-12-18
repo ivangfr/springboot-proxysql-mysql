@@ -1,6 +1,6 @@
-package com.ivanfranchin.customerapi.repository;
+package com.ivanfranchin.customerapi.customer;
 
-import com.ivanfranchin.customerapi.model.Customer;
+import com.ivanfranchin.customerapi.customer.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

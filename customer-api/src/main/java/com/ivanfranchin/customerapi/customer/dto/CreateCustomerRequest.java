@@ -1,4 +1,4 @@
-package com.ivanfranchin.customerapi.rest.dto;
+package com.ivanfranchin.customerapi.customer.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

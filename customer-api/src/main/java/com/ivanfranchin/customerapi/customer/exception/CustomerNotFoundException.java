@@ -1,4 +1,4 @@
-package com.ivanfranchin.customerapi.exception;
+package com.ivanfranchin.customerapi.customer.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
