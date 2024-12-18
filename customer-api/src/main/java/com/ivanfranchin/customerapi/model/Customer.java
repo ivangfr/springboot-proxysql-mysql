@@ -1,5 +1,7 @@
 package com.ivanfranchin.customerapi.model;
 
+import com.ivanfranchin.customerapi.rest.dto.CreateCustomerRequest;
+import com.ivanfranchin.customerapi.rest.dto.UpdateCustomerRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,5 +43,21 @@ public class Customer {
     @PreUpdate
     public void onPreUpdate() {
         updatedAt = Instant.now();
+    }
+
+    public static Customer from(CreateCustomerRequest createCustomerRequest) {
+        Customer customer = new Customer();
+        customer.setFirstName(createCustomerRequest.firstName());
+        customer.setLastName(createCustomerRequest.lastName());
+        return customer;
+    }
+
+    public static void updateFrom(UpdateCustomerRequest updateCustomerRequest, Customer customer) {
+        if (updateCustomerRequest.firstName() != null) {
+            customer.setFirstName(updateCustomerRequest.firstName());
+        }
+        if (updateCustomerRequest.lastName() != null) {
+            customer.setLastName(updateCustomerRequest.lastName());
+        }
     }
 }
