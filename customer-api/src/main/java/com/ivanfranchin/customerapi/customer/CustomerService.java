@@ -1,16 +1,31 @@
 package com.ivanfranchin.customerapi.customer;
 
+import com.ivanfranchin.customerapi.customer.exception.CustomerNotFoundException;
 import com.ivanfranchin.customerapi.customer.model.Customer;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface CustomerService {
+@RequiredArgsConstructor
+@Service
+public class CustomerService {
 
-    List<Customer> getAllCustomers();
+    private final CustomerRepository customerRepository;
 
-    Customer validateAndGetCustomer(Long id);
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
 
-    Customer saveCustomer(Customer customer);
+    public Customer validateAndGetCustomer(Long id) {
+        return customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
+    }
 
-    void deleteCustomer(Customer customer);
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
+    }
 }
